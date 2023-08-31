@@ -17,8 +17,7 @@ public class EmployeeRepositoryTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    // JUnit test for save employee operation
-    // @DisplayName("JUnit test for save employee operation")
+    @DisplayName("JUnit test for save employee operation")
     @Test
     public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
 
@@ -33,6 +32,7 @@ public class EmployeeRepositoryTest {
         Assertions.assertThat(savedEmployee.getId()).isGreaterThan(0);
     }
 
+    @DisplayName("JUnit test for find all employee operation")
     @Test
     public void givenEmployeeList_whenFindAll_thenReturnEmployeeList() {
         // given - precondition or setup
@@ -52,6 +52,7 @@ public class EmployeeRepositoryTest {
         Assertions.assertThat(employees.size()).isEqualTo(2);
     }
 
+    @DisplayName("JUnit test for find employee by id operation")
     @Test
     public void givenEmployeeObject_whenFindById_thenReturnEmployeeObject() {
 
