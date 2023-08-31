@@ -24,6 +24,7 @@ public class EmployeeRepositoryTest {
         // given - precondition or setup
         Employee employee = Employee.builder().firstName("Tohir").lastName("Raihan").email("tohir.raihan@gmail.com")
                 .build();
+
         // when - action or the behaviour that we are going to test
         Employee savedEmployee = employeeRepository.save(employee);
 
@@ -35,6 +36,7 @@ public class EmployeeRepositoryTest {
     @DisplayName("JUnit test for find all employee operation")
     @Test
     public void givenEmployeeList_whenFindAll_thenReturnEmployeeList() {
+
         // given - precondition or setup
         Employee employee1 = Employee.builder().firstName("Tohir").lastName("Raihan").email("tohir.raihan@gmail.com")
                 .build();
@@ -118,6 +120,26 @@ public class EmployeeRepositoryTest {
 
         // then - verify the output
         Assertions.assertThat(optionalEmployee).isEmpty();
+    }
+
+    @DisplayName("JUnit test for custom query using JPQL with index")
+    @Test
+    public void givenFirstNameAndLastName_whenFindByJPQL_thenReturnEmployee() {
+
+        // given - precondition or setup
+        Employee employee = Employee.builder().firstName("Tohir").lastName("Raihan").email("tohir.raihan@gmail.com")
+                .build();
+
+        employeeRepository.save(employee);
+
+        String firstName = "Tohir";
+        String lastName = "Raihan";
+
+        // when - action or the behaviour that we are going to test
+        Employee employeeDB = employeeRepository.findByJPQL(firstName, lastName);
+
+        // then - verify the output
+        Assertions.assertThat(employeeDB).isNotNull();
     }
 
 }
