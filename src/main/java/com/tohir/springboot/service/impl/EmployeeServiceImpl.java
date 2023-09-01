@@ -11,8 +11,12 @@ import com.tohir.springboot.service.EmployeeService;
 
 public class EmployeeServiceImpl implements EmployeeService {
 
-    @Autowired
+    // @Autowired
     private EmployeeRepository employeeRepository;
+
+    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
 
     @Override
     public Employee saveEmployee(Employee employee) {
