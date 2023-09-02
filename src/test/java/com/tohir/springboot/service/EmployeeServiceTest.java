@@ -2,6 +2,7 @@ package com.tohir.springboot.service;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
@@ -121,5 +122,36 @@ public class EmployeeServiceTest {
 
         // then - verify the output
         Assertions.assertThat(employeeDB).isNotNull();
+    }
+
+    @DisplayName("JUnit test for updateEmployee method")
+    @Test
+    public void givenEmployeeObject_whenUpdateEmployee_thenReturnUpdatedEmployee() {
+
+        // given - precondition or setup
+        Employee employee2 = Employee.builder().firstName("Jack").lastName("Harpoor")
+                .email("jack@gmail.com")
+                .build();
+        BDDMockito.given(employeeRepository.save(employee2)).willReturn(employee2);
+
+        // when - action or the behaviour that we are going to test
+        Employee updatedEmployee = employeeService.updatEmployee(employee2);
+
+        // then - verify the output
+        Assertions.assertThat(updatedEmployee.getEmail()).isEqualTo(employee2.getEmail());
+    }
+
+    @DisplayName("JUnit test for deleteEmployee method")
+    @Test
+    public void givenEmployeeId_whenDeleteEmployee_thenNothing() {
+
+        // given - precondition or setup
+        BDDMockito.willDoNothing().given(employeeRepository).deleteById(employee.getId());
+
+        // when - action or the behaviour that we are going to test
+        employeeService.deleteEmployee(employee.getId());
+
+        // then - verify the output
+        verify(employeeRepository, times(1)).deleteById(employee.getId());
     }
 }
