@@ -109,4 +109,17 @@ public class EmployeeServiceTest {
         Assertions.assertThat(employees).isEmpty();
         Assertions.assertThat(employees.size()).isEqualTo(0);
     }
+
+    @DisplayName("JUnit test for getEmployeeById method")
+    @Test
+    public void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() {
+        // given - precondition or setup
+        BDDMockito.given(employeeRepository.findById(employee.getId())).willReturn(Optional.of(employee));
+
+        // when - action or the behaviour that we are going to test
+        Employee employeeDB = employeeService.getEmployeeById(employee.getId()).get();
+
+        // then - verify the output
+        Assertions.assertThat(employeeDB).isNotNull();
+    }
 }
