@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.tohir.springboot.entity.Employee;
 import com.tohir.springboot.exception.ResourceNotFoundException;
 import com.tohir.springboot.repository.EmployeeRepository;
 import com.tohir.springboot.service.EmployeeService;
 
+@Service
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
