@@ -9,12 +9,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,6 +21,11 @@ import com.tohir.springboot.entity.Employee;
 import com.tohir.springboot.exception.ResourceNotFoundException;
 import com.tohir.springboot.repository.EmployeeRepository;
 import com.tohir.springboot.service.impl.EmployeeServiceImpl;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -37,9 +40,6 @@ public class EmployeeServiceTest {
 
     @BeforeEach
     public void setUp() {
-        // employeeRepository = Mockito.mock(EmployeeRepository.class);
-        // employeeService = new EmployeeServiceImpl(employeeRepository);
-
         this.employee = Employee.builder().id(1L).firstName("Tohir").lastName("Raihan")
                 .email("tohir.raihan@gmail.com")
                 .build();
@@ -50,14 +50,14 @@ public class EmployeeServiceTest {
     public void givenEmployeeObject_whenSaveEmployee_thenReturnEmployeeObject() {
 
         // given - precondition or setup
-        BDDMockito.given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
-        BDDMockito.given(employeeRepository.save(employee)).willReturn(employee);
+        given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
+        given(employeeRepository.save(employee)).willReturn(employee);
 
         // when - action or the behaviour that we are going to test
         Employee savedEmployee = employeeService.saveEmployee(employee);
 
         // then - verify the output
-        Assertions.assertThat(savedEmployee);
+        assertThat(savedEmployee).isNotNull();
     }
 
     @DisplayName("JUnit test for saveEmployee method which throws exception")
@@ -65,11 +65,11 @@ public class EmployeeServiceTest {
     public void givenExistingEmail_whenSaveEmployee_thenThrowsException() {
 
         // given - precondition or setup
-        BDDMockito.given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.of(employee));
+        given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.of(employee));
         // BDDMockito.given(employeeRepository.save(employee)).willReturn(employee);
 
         // when - action or the behaviour that we are going to test
-        org.junit.jupiter.api.Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+        assertThrows(ResourceNotFoundException.class, () -> {
             employeeService.saveEmployee(employee);
         });
 
@@ -86,14 +86,14 @@ public class EmployeeServiceTest {
                 .email("jack@gmail.com")
                 .build();
 
-        BDDMockito.given(employeeRepository.findAll()).willReturn(List.of(employee, employee2));
+        given(employeeRepository.findAll()).willReturn(List.of(employee, employee2));
 
         // when - action or the behaviour that we are going to test
         List<Employee> employees = employeeService.getAllEmployees();
 
         // then - verify the output
-        Assertions.assertThat(employees).isNotNull();
-        Assertions.assertThat(employees.size()).isEqualTo(2);
+        assertThat(employees).isNotNull();
+        assertThat(employees.size()).isEqualTo(2);
     }
 
     @DisplayName("JUnit test for getAllEmployees method (negative senario)")
@@ -101,27 +101,27 @@ public class EmployeeServiceTest {
     public void givenEmptyEmployeesList_whenGetAllEmployees_thenReturnEmptyEmployeesList() {
 
         // given - precondition or setup
-        BDDMockito.given(employeeRepository.findAll()).willReturn(Collections.emptyList());
+        given(employeeRepository.findAll()).willReturn(Collections.emptyList());
 
         // when - action or the behaviour that we are going to test
         List<Employee> employees = employeeService.getAllEmployees();
 
         // then - verify the output
-        Assertions.assertThat(employees).isEmpty();
-        Assertions.assertThat(employees.size()).isEqualTo(0);
+        assertThat(employees).isEmpty();
+        assertThat(employees.size()).isEqualTo(0);
     }
 
     @DisplayName("JUnit test for getEmployeeById method")
     @Test
     public void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() {
         // given - precondition or setup
-        BDDMockito.given(employeeRepository.findById(employee.getId())).willReturn(Optional.of(employee));
+        given(employeeRepository.findById(employee.getId())).willReturn(Optional.of(employee));
 
         // when - action or the behaviour that we are going to test
         Employee employeeDB = employeeService.getEmployeeById(employee.getId()).get();
 
         // then - verify the output
-        Assertions.assertThat(employeeDB).isNotNull();
+        assertThat(employeeDB).isNotNull();
     }
 
     @DisplayName("JUnit test for updateEmployee method")
@@ -132,13 +132,13 @@ public class EmployeeServiceTest {
         Employee employee2 = Employee.builder().firstName("Jack").lastName("Harpoor")
                 .email("jack@gmail.com")
                 .build();
-        BDDMockito.given(employeeRepository.save(employee2)).willReturn(employee2);
+        given(employeeRepository.save(employee2)).willReturn(employee2);
 
         // when - action or the behaviour that we are going to test
         Employee updatedEmployee = employeeService.updatEmployee(employee2);
 
         // then - verify the output
-        Assertions.assertThat(updatedEmployee.getEmail()).isEqualTo(employee2.getEmail());
+        assertThat(updatedEmployee.getEmail()).isEqualTo(employee2.getEmail());
     }
 
     @DisplayName("JUnit test for deleteEmployee method")
@@ -146,7 +146,8 @@ public class EmployeeServiceTest {
     public void givenEmployeeId_whenDeleteEmployee_thenNothing() {
 
         // given - precondition or setup
-        BDDMockito.willDoNothing().given(employeeRepository).deleteById(employee.getId());
+        // willDoNothing is used when stubing any method which returns void
+        willDoNothing().given(employeeRepository).deleteById(employee.getId());
 
         // when - action or the behaviour that we are going to test
         employeeService.deleteEmployee(employee.getId());
