@@ -39,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee updatEmployee(Employee updatedEmployee) {
+    public Employee updateEmployee(Employee updatedEmployee) {
         return employeeRepository.save(updatedEmployee);
     }
 

@@ -135,7 +135,7 @@ public class EmployeeServiceTest {
         given(employeeRepository.save(employee2)).willReturn(employee2);
 
         // when - action or the behaviour that we are going to test
-        Employee updatedEmployee = employeeService.updatEmployee(employee2);
+        Employee updatedEmployee = employeeService.updateEmployee(employee2);
 
         // then - verify the output
         assertThat(updatedEmployee.getEmail()).isEqualTo(employee2.getEmail());
